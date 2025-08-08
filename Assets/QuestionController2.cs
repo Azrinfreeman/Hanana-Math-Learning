@@ -1,0 +1,19 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class QuestionController2 : MonoBehaviour
+{
+    [System.Serializable]
+    public class QuestionsControl
+    {
+        public List<Transform> bubbles;
+        public List<Transform> Questions;
+    }
+
+    // Start is called before the first frame update
+    void Start() { }
+
+    // Update is called once per frame
+    void Update() { }
+}
