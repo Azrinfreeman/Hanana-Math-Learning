@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - bottomBorder
+  - firstP
+  - secondP
+  - thirdP
+  - fourP
+  - fifthP
   layers:
   - Default
   - TransparentFX

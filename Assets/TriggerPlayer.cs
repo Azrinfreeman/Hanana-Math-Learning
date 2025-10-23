@@ -21,11 +21,11 @@ public class TriggerPlayer : MonoBehaviour
             other.gameObject.GetComponent<BoxCollider2D>().enabled = false;
             if (isCorrect)
             {
-                GameController.instance.scores += 10;
+                GameController.instance.AddScores(10);
             }
             else
             {
-                GameController.instance.scores -= 10;
+                GameController.instance.MinusScore(10);
             }
             Destroy(gameObject);
         }

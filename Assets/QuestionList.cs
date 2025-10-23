@@ -5,17 +5,13 @@ using UnityEngine;
 
 public class QuestionList : MonoBehaviour
 {
-    public static QuestionList instance;
+    public int difficulty;
 
     [SerializeField]
     public List<QuestionAndAnswer> questionlist = new List<QuestionAndAnswer>();
 
-    void Awake()
-    {
-        instance = this;
-    }
+    void Awake() { }
 
-  
     [System.Serializable]
     public class QuestionAndAnswer
     {

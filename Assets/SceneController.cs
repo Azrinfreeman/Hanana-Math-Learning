@@ -20,4 +20,31 @@ public class SceneController : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void startMusic()
+    {
+        GameObject.Find("music-bg").GetComponent<AudioSource>().Play();
+    }
+
+    public void LoadScenes(string sceneName)
+    {
+        StartCoroutine(LoadSceneAsync(sceneName));
+    }
+
+    private IEnumerator LoadSceneAsync(string sceneName)
+    {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
+        asyncLoad.allowSceneActivation = false;
+
+        // Wait until the scene is fully loaded
+        while (!asyncLoad.isDone)
+        {
+            if (asyncLoad.progress >= 0.9f)
+            {
+                // Activate the scene
+                asyncLoad.allowSceneActivation = true;
+            }
+            yield return null;
+        }
+    }
 }

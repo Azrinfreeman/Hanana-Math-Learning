@@ -17,6 +17,7 @@ public class BadgesController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        PlayerPrefs.SetInt("Trophy_0", 1);
         AssignBadge();
     }
 

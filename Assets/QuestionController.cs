@@ -2,12 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering.UI;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
 public class QuestionController : MonoBehaviour
 {
-    void Awake() { }
+    public static QuestionController instance;
+
+    void Awake()
+    {
+        instance = this;
+    }
 
     public TextMeshProUGUI questionNumberTopLabel;
     public TextMeshProUGUI questionLabel;
@@ -17,6 +23,9 @@ public class QuestionController : MonoBehaviour
     public Transform avatarState;
     public int countQuestion;
     public int countStep;
+
+    public QuestionList questionLists;
+    public Transform WinPanel;
 
     void defaultAvatarFace()
     {
@@ -40,20 +49,46 @@ public class QuestionController : MonoBehaviour
     }
 
     // Start is called before the first frame update
+
+    public void Difficulty(string name)
+    {
+        questionLists = GameObject.Find(name).GetComponent<QuestionList>();
+        Debug.Log(questionLists.questionlist[countQuestion].question[countStep]);
+
+        applyQuestion();
+        applyAnswerOnButton();
+    }
+
+    public void SetPlayerPrefs(string textPlayer)
+    {
+        PlayerPrefs.SetInt(textPlayer, 1);
+    }
+
     void Start()
     {
         countQuestion = 0;
         countStep = 0;
 
-        Debug.Log(QuestionList.instance.questionlist[countQuestion].question[countStep]);
-        applyQuestion();
-        applyAnswerOnButton();
+        if (
+            PlayerPrefs.GetInt("QuestionMudah") == 1
+            && PlayerPrefs.GetInt("QuestionSederhana") == 1
+            && PlayerPrefs.GetInt("QuestionSukar") == 1 & PlayerPrefs.GetInt("QuestionCabaran") == 1
+        )
+        {
+            PlayerPrefs.SetInt("Trophy_2", 1);
+        }
+
+        if (PlayerPrefs.GetInt("QuizScore") == 250)
+        {
+            PlayerPrefs.SetInt("Trophy_5", 1);
+        }
+        GameObject.Find("music-bg").GetComponent<AudioSource>().Stop();
     }
 
     private void applyQuestion()
     {
         questionNumberTopLabel.text = "Soalan " + (countQuestion + 1);
-        questionLabel.text = QuestionList.instance.questionlist[countQuestion].question[0];
+        questionLabel.text = questionLists.questionlist[countQuestion].question[0];
     }
 
     private void applyAnswerOnButton()
@@ -84,8 +119,7 @@ public class QuestionController : MonoBehaviour
         for (
             int i = 0;
             i
-                < QuestionList
-                    .instance
+                < questionLists
                     .questionlist[countQuestion]
                     .QuestionOnAnswersBtn[countStep]
                     .answer
@@ -99,8 +133,7 @@ public class QuestionController : MonoBehaviour
         for (
             int i = 0;
             i
-                < QuestionList
-                    .instance
+                < questionLists
                     .questionlist[countQuestion]
                     .QuestionOnAnswersBtn[countStep]
                     .answer
@@ -110,23 +143,18 @@ public class QuestionController : MonoBehaviour
         {
             answerBtn[i].GetComponent<Button>().onClick.RemoveAllListeners();
 
-            answerBtn[i].GetChild(0).GetComponent<TextMeshProUGUI>().text = QuestionList
-                .instance
+            answerBtn[i].GetChild(0).GetComponent<TextMeshProUGUI>().text = questionLists
                 .questionlist[countQuestion]
                 .QuestionOnAnswersBtn[countStep]
                 .answer[i];
 
             if (
-                QuestionList
-                    .instance
-                    .questionlist[countQuestion]
-                    .QuestionOnAnswersBtn[countStep]
-                    .answeOnBtn == i
+                questionLists.questionlist[countQuestion].QuestionOnAnswersBtn[countStep].answeOnBtn
+                == i
             )
             {
                 Debug.Log(
-                    QuestionList
-                        .instance
+                    questionLists
                         .questionlist[countQuestion]
                         .QuestionOnAnswersBtn[countStep]
                         .answeOnBtn
@@ -156,11 +184,8 @@ public class QuestionController : MonoBehaviour
         for (int i = 0; i < answerBtn.Count; i++)
         {
             if (
-                QuestionList
-                    .instance
-                    .questionlist[countQuestion]
-                    .QuestionOnAnswersBtn[countStep]
-                    .answeOnBtn == i
+                questionLists.questionlist[countQuestion].QuestionOnAnswersBtn[countStep].answeOnBtn
+                == i
             )
             {
                 answerBtn[i].GetComponent<Image>().color = new Color32(145, 187, 21, 255);
@@ -223,7 +248,7 @@ public class QuestionController : MonoBehaviour
 
         //play animation add coin and change text
         GameObject.Find("Coin").GetComponent<Animator>().Play("addCoin");
-        yield return new WaitForSeconds(1.3f);
+        yield return new WaitForSeconds(0.4f);
         //play animation default idle
         GameObject.Find("Coin").GetComponent<Animator>().Play("idleCoin");
         for (int i = 0; i < 10; i++)
@@ -246,9 +271,7 @@ public class QuestionController : MonoBehaviour
         countStep++;
         yield return new WaitForSeconds(3);
 
-        if (
-            countStep < QuestionList.instance.questionlist[countQuestion].QuestionOnAnswersBtn.Count
-        )
+        if (countStep < questionLists.questionlist[countQuestion].QuestionOnAnswersBtn.Count)
         {
             //countStep++;
             // applyQuestion();
@@ -258,13 +281,24 @@ public class QuestionController : MonoBehaviour
         {
             countQuestion++;
             countStep = 0;
-            applyQuestion();
-            applyAnswerOnButton();
+            if (countQuestion < questionLists.questionlist.Count)
+            {
+                applyQuestion();
+                applyAnswerOnButton();
+            }
+            else
+            {
+                WinPanel.gameObject.SetActive(true);
+            }
         }
 
         disableAllButtons(true);
         resetButton();
         defaultAvatarFace();
+        if (countQuestion > questionLists.questionlist.Count)
+        {
+            WinPanel.gameObject.SetActive(true);
+        }
     }
 
     public void NextStepping()

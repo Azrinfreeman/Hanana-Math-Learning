@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class ScoreController : MonoBehaviour
@@ -11,6 +10,7 @@ public class ScoreController : MonoBehaviour
     public int score;
 
     public TextMeshProUGUI textScore;
+    public int scores;
 
     void Awake()
     {
@@ -27,4 +27,24 @@ public class ScoreController : MonoBehaviour
 
     // Update is called once per frame
     void Update() { }
+
+    public void AddScores(int score)
+    {
+        scores = scores + score;
+        textScore.text = scores.ToString();
+        GameObject.Find("yay").GetComponent<AudioSource>().Play();
+        GameObject.Find("claps").GetComponent<AudioSource>().Play();
+    }
+
+    public void MinusScore(int score)
+    {
+        scores = scores - score;
+        if (scores <= 0)
+        {
+            scores = 0;
+        }
+        textScore.text = scores.ToString();
+
+        GameObject.Find("salah").GetComponent<AudioSource>().Play();
+    }
 }
