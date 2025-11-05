@@ -27,6 +27,8 @@ public class QuestionController : MonoBehaviour
     public QuestionList questionLists;
     public Transform WinPanel;
 
+    public Transform particle;
+
     void defaultAvatarFace()
     {
         avatarState.GetChild(0).gameObject.SetActive(true);
@@ -227,6 +229,10 @@ public class QuestionController : MonoBehaviour
         {
             GameObject.Find("salah").GetComponent<AudioSource>().Play();
         }
+        if (!GameObject.Find("aww").GetComponent<AudioSource>().isPlaying)
+        {
+            GameObject.Find("aww").GetComponent<AudioSource>().Play();
+        }
         //sad
         AvatarSad();
     }
@@ -234,6 +240,10 @@ public class QuestionController : MonoBehaviour
     IEnumerator addingmark()
     {
         yield return new WaitForSeconds(1);
+        if (!GameObject.Find("yay").GetComponent<AudioSource>().isPlaying)
+        {
+            GameObject.Find("cheers").GetComponent<AudioSource>().Play();
+        }
         if (!GameObject.Find("yay").GetComponent<AudioSource>().isPlaying)
         {
             GameObject.Find("yay").GetComponent<AudioSource>().Play();
@@ -297,6 +307,19 @@ public class QuestionController : MonoBehaviour
         defaultAvatarFace();
         if (countQuestion > questionLists.questionlist.Count)
         {
+            if (!GameObject.Find("yay").GetComponent<AudioSource>().isPlaying)
+            {
+                GameObject.Find("cheers").GetComponent<AudioSource>().Play();
+            }
+            if (!GameObject.Find("yay").GetComponent<AudioSource>().isPlaying)
+            {
+                GameObject.Find("yay").GetComponent<AudioSource>().Play();
+            }
+            if (!GameObject.Find("claps").GetComponent<AudioSource>().isPlaying)
+            {
+                GameObject.Find("claps").GetComponent<AudioSource>().Play();
+            } //smile
+            AvatarSmile();
             WinPanel.gameObject.SetActive(true);
         }
     }
